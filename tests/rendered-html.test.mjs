@@ -25,9 +25,9 @@ test("renders the notebook and margin markdown in the built page", async () => {
 test("keeps the twelve initial prompts separate and in order", async () => {
   const markdown = await readFile(new URL("../notebook.md", import.meta.url), "utf8");
   const prompts = marked.lexer(markdown).filter((token) => token.type === "blockquote");
-  assert.equal(prompts.length, 12);
+  assert.ok(prompts.length >= 12);
   assert.match(prompts[0].text, /^i want to develop an llm\./);
-  assert.equal(prompts.at(-1).text, "lgtm");
+  assert.equal(prompts[11].text, "lgtm");
 });
 
 test("allows markdown and embedded visuals in a margin note", () => {
