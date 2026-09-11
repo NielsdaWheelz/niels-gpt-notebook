@@ -57,3 +57,11 @@ previous attempts: [niels-gpt-1](https://github.com/NielsdaWheelz/niels-gpt-1), 
 <!-- separate prompts -->
 
 > lgtm
+
+<!-- separate prompts -->
+
+> how is nielseriknandal.com hosted? frontend-only, vercel? can we do the same for this? i can create cloudflare redirect for it (just remind me how)
+
+<!-- separate prompts -->
+
+> public. you have vercel access; get it done, tell me when you need me to do something
