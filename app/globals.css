@@ -1,0 +1,86 @@
+:root {
+  color-scheme: light;
+  color: #292824;
+  background: #faf9f6;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 72px 32px 120px;
+}
+
+.notebook {
+  width: calc(100% - 320px);
+  display: flow-root;
+  overflow-wrap: anywhere;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+h1 { margin: 0 0 56px; font-size: 2rem; }
+h2 { margin: 56px 0 24px; font-size: 1.4rem; }
+h3 { margin: 32px 0 16px; font-size: 1.15rem; }
+p, ul, ol, pre, figure { margin: 0 0 24px; }
+li + li { margin-top: 8px; }
+
+blockquote {
+  margin: 0 0 40px;
+  padding-left: 20px;
+  border-left: 1px solid #cdc9bf;
+}
+
+blockquote > :last-child { margin-bottom: 0; }
+
+aside {
+  float: right;
+  clear: right;
+  width: 256px;
+  margin-right: -320px;
+  margin-bottom: 24px;
+  color: #656158;
+  font: 14px/1.6 system-ui, sans-serif;
+}
+
+aside p, aside ul, aside ol { margin-bottom: 12px; }
+aside > :last-child { margin-bottom: 0; }
+
+a {
+  color: inherit;
+  text-decoration-color: #aaa295;
+  text-underline-offset: 3px;
+}
+
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid #795c30; outline-offset: 4px; }
+
+code { font: 0.85em ui-monospace, monospace; }
+pre { overflow-x: auto; padding: 16px; background: #eeece6; }
+pre code { white-space: pre; }
+img, video, canvas, iframe { max-width: 100%; }
+iframe { display: block; width: 100%; border: 0; margin-bottom: 24px; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.9rem; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #cdc9bf; }
+
+@media (max-width: 850px) {
+  main { max-width: 720px; padding: 40px 24px 72px; }
+  .notebook { width: 100%; }
+  h1 { margin-bottom: 40px; }
+  aside {
+    float: none;
+    width: auto;
+    margin: 24px 0;
+    padding-left: 20px;
+    border-left: 1px solid #cdc9bf;
+  }
+}

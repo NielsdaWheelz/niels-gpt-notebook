@@ -1,46 +1,48 @@
 # niels-gpt-notebook
 
-a learning notebook for building and understanding a language model. intended website: `llm.nielseriknandal.com`.
+one continuous document: prompts, your own answers, predictions, experiments, and margin notes.
 
-status: local repository and working plan. the website, hosting, and domain connection have not been implemented. the name is provisional.
+write in [notebook.md](notebook.md). prompts are blockquotes; your answers are ordinary markdown between them. no required template. the existing prompts are copied from the project conversation; assistant answers are intentionally absent.
 
-## purpose
+## margin notes
 
-record the questions, predictions, experiments, failures, explanations, and revisions that build understanding. interactive visualizations belong inside that record, with their source in this repository. author the entries and visualizations together as the corresponding concepts are learned; a finished assistant-written tutorial does not substitute for that work.
+put an aside immediately before the paragraph it belongs beside. keep the blank lines so markdown inside it is rendered:
 
-provide two ways through the same entries: a chronological learning log and a concept index. give an entry a stable address so later work can cite an earlier experiment or correction. preserve historical observations and explain revised conclusions rather than silently rewriting the learning history.
+```markdown
+<aside>
 
-## repository boundary
+a note, a [link](https://example.com), an image, or some html.
 
-| repository | owns |
-| --- | --- |
-| `niels-gpt-3` | model implementation, training, evaluation, experiment configurations, and authoritative run artifacts |
-| `niels-gpt-notebook` | learning entries, mathematical explanations, visualization source, small published data snapshots, and the website |
+</aside>
 
-measured notebook results identify the training repository's exact commit, run, configuration, and relevant data/tokenizer versions. small exports can be committed beside an entry. large datasets and checkpoints remain outside the website repository. illustrative calculations are labeled as such and checked against the model implementation when they claim to reproduce it.
+the paragraph this note accompanies.
+```
 
-the cost of two repositories is keeping these references explicit. the benefit is independent publication and presentation tooling without entangling the training environment. begin with simple exported data and pinned references; no shared package or submodule is required.
+on smaller screens, the note appears inline at that position. neighbouring notes stack without overlapping; a long note can push the next one down.
 
-## an entry we build together
+## visualizations
 
-1. the question and current prediction.
-2. the smallest derivation or program needed to test it.
-3. an interactive visualization or measured figure when it helps.
-4. the observation, including surprising or negative results.
-5. the explanation in the learner's own words, remaining uncertainty, and the next question.
+we build these together. keep a standalone html/css/js visualization in `public/viz/`, then embed it in the main text or an aside:
 
-use these as prompts, not mandatory empty headings. distinguish illustrative numbers, actual model traces, and measured experiments. keep numerical values inspectable beneath the visual representation.
+```html
+<iframe src="/viz/example.html" title="what this visualization shows" height="400"></iframe>
+```
 
-## publication and computation
+choose its height for the visualization. its javascript and styling stay inside the frame. ordinary html can go directly in the markdown. this is trusted, locally authored content, not a place to paste unreviewed scripts.
 
-the initial site should publish prose, mathematics, source, recorded results, and small browser interactions. training and gpu experiments run in the model environment; rendering a page must not silently start or repeat a training run. an embedded live python notebook is an option for a lesson that benefits from it, not a prerequisite for the whole site.
+[drafts/temperature-and-sampling.html](drafts/temperature-and-sampling.html) preserves the earlier sketch unchanged. it still depends on conversation styling and is not published. its logits are illustrative, not model output.
 
-evaluate the publishing tool through one jointly authored entry. [quarto](https://quarto.org/docs/computations/python.html) supports python/jupyter content and [reactive observable javascript](https://quarto.org/docs/computations/ojs.html); it is a strong candidate when computational writing leads. [astro with mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) is a candidate when bespoke interactive presentation leads, with more notebook integration work. these are planning options, not installed dependencies or a settled stack. hosting is also undecided.
+## run
 
-the useful first slice is one readable entry with one understandable experiment, source links, and a stable address. build it together before expanding navigation, automation, or a library of visualizations.
+```sh
+npm ci
+npm run dev
+```
 
-## preserved draft
+`npm test` builds the site and checks its rendered content. `npm run lint` checks the source.
 
-[temperature-and-sampling.html](drafts/temperature-and-sampling.html) preserves the earlier illustrative temperature sketch unchanged. it is a reference draft, not a completed learning entry. it depends on the original conversation's styling utilities and is not yet a standalone website page. it contains invented fixed logits, not output from a trained model.
+the site uses marked to render markdown, plain css, and the sites vinext publishing scaffold. no database, browser editor, notebook kernel, or visualization framework. the hosting scaffold adds dependencies; the document and standalone visuals do not depend on it.
 
-future visualizations should have their authoritative source here. conversation previews can show that work, but must not become its only durable copy.
+model code and authoritative run artifacts belong in `../niels-gpt-3`. when publishing measured results, record the model commit and run beside them. publishing does not rerun experiments.
+
+intended domain: `llm.nielseriknandal.com`. deployment starts private; domain setup is separate.
