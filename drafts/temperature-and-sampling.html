@@ -1,0 +1,72 @@
+<div id="niels-temperature-lab">
+  <style>
+    #niels-temperature-lab .probability-row { display: grid; grid-template-columns: 64px 50px minmax(72px, 1fr) 58px; align-items: center; gap: 10px; margin: 16px 0; }
+    #niels-temperature-lab .probability-track { height: 18px; background: var(--muted); }
+    #niels-temperature-lab .probability-fill { height: 100%; background: var(--viz-series-1); transition: width 160ms ease; }
+    #niels-temperature-lab .number { text-align: right; font-variant-numeric: tabular-nums; }
+    #niels-temperature-lab .lab-space { margin: 20px 0; }
+    @media (prefers-reduced-motion: reduce) { #niels-temperature-lab .probability-fill { transition: none; } }
+  </style>
+  <h3>temperature and next-token sampling</h3>
+  <div class="text-small">illustrative five-token vocabulary · fixed logits</div>
+  <div class="lab-space">prefix: <code>the cat sat on the</code></div>
+  <div class="viz-controls">
+    <label class="form-label" for="niels-temperature-input">temperature: <output id="niels-temperature-value">1.0</output>
+      <input class="form-range" id="niels-temperature-input" type="range" min="0" max="2.5" step="0.1" value="1" />
+    </label>
+  </div>
+  <div class="probability-row text-small" aria-hidden="true"><span>token</span><span class="number">logit</span><span>probability</span><span class="number">%</span></div>
+  <div id="niels-probability-bars" role="img" aria-label="five next-token probabilities">
+    <div class="probability-row"><span>mat</span><span class="number">3.0</span><div class="probability-track"><div class="probability-fill"></div></div><span class="number probability-value"></span></div>
+    <div class="probability-row"><span>floor</span><span class="number">2.0</span><div class="probability-track"><div class="probability-fill"></div></div><span class="number probability-value"></span></div>
+    <div class="probability-row"><span>sofa</span><span class="number">1.0</span><div class="probability-track"><div class="probability-fill"></div></div><span class="number probability-value"></span></div>
+    <div class="probability-row"><span>moon</span><span class="number">0.0</span><div class="probability-track"><div class="probability-fill"></div></div><span class="number probability-value"></span></div>
+    <div class="probability-row"><span>idea</span><span class="number">−1.0</span><div class="probability-track"><div class="probability-fill"></div></div><span class="number probability-value"></span></div>
+  </div>
+  <div class="viz-row lab-space"><button class="btn" type="button" id="niels-sample-token">sample next token</button><span id="niels-sample-result" aria-live="polite">no token sampled</span></div>
+  <div class="text-small" id="niels-entropy" aria-live="polite"></div>
+  <script>
+    (() => {
+      const root = document.getElementById('niels-temperature-lab');
+      const slider = root.querySelector('#niels-temperature-input');
+      const tokens = ['mat', 'floor', 'sofa', 'moon', 'idea'];
+      const logits = [3, 2, 1, 0, -1];
+      const fills = root.querySelectorAll('.probability-fill');
+      const values = root.querySelectorAll('.probability-value');
+      let probabilities;
+      let draws = 0;
+      function update() {
+        const temperature = Number(slider.value);
+        const weights = temperature === 0 ? [1, 0, 0, 0, 0] : logits.map(logit => Math.exp((logit - 3) / temperature));
+        const total = weights.reduce((sum, value) => sum + value, 0);
+        probabilities = weights.map(value => value / total);
+        root.querySelector('#niels-temperature-value').textContent = temperature === 0 ? '0 · greedy' : temperature.toFixed(1);
+        const descriptions = [];
+        probabilities.forEach((probability, index) => {
+          const percent = 100 * probability;
+          fills[index].style.width = percent + '%';
+          values[index].textContent = percent.toFixed(1);
+          descriptions.push(tokens[index] + ': ' + percent.toFixed(1) + ' percent');
+        });
+        root.querySelector('#niels-probability-bars').setAttribute('aria-label', descriptions.join(', '));
+        const entropy = -probabilities.reduce((sum, probability) => sum + (probability > 0 ? probability * Math.log2(probability) : 0), 0);
+        root.querySelector('#niels-entropy').textContent = 'distribution entropy: ' + entropy.toFixed(3) + ' bits';
+        draws = 0;
+        root.querySelector('#niels-sample-result').textContent = 'no token sampled';
+      }
+      slider.addEventListener('input', update);
+      root.querySelector('#niels-sample-token').addEventListener('click', () => {
+        const draw = Math.random();
+        let cumulative = 0;
+        let selected = tokens.length - 1;
+        for (let index = 0; index < probabilities.length; index++) {
+          cumulative += probabilities[index];
+          if (draw < cumulative) { selected = index; break; }
+        }
+        draws += 1;
+        root.querySelector('#niels-sample-result').textContent = 'draw ' + draws + ': ' + tokens[selected];
+      });
+      update();
+    })();
+  </script>
+</div>
